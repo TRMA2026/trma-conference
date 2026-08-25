@@ -891,7 +891,7 @@ function rowsToPeople(rows){
       });
     }
     const id = email ? "e:"+email.toLowerCase() : slug(name+"-"+company);
-    out.push({id,name,company,title:title||role,role,sessions});
+    out.push({id,name,company,title:title||role,role,email,sessions});
   }
   return out;
 }
