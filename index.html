@@ -323,6 +323,35 @@ img{max-width:100%;display:block;}
 .notes:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
 .notes-hint{font-size:11px;color:var(--ink-faint);margin-top:8px;line-height:1.4;}
 
+/* ===================== SESSION DETAIL SHEET ===================== */
+.sess{cursor:pointer;transition:transform .12s,box-shadow .12s;text-align:left;}
+.sess:active{transform:scale(.985);}
+.sess-loc-row{display:flex;align-items:center;gap:5px;margin-top:5px;font-size:12px;color:var(--ink-faint);}
+.sess-loc-row svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;flex:0 0 auto;}
+.sess.kind-special .sess-loc-row,.sess.kind-keynote .sess-loc-row,.sess.kind-reception .sess-loc-row{color:rgba(255,255,255,.65);}
+#sessSheet .sh-time-pill{
+  display:inline-block;font-size:11px;font-weight:700;letter-spacing:.4px;color:var(--gold-2);
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:20px;
+  padding:4px 11px;margin-top:8px;font-variant-numeric:tabular-nums;
+}
+#sessSheet .sh-name{margin-top:6px;}
+.sess-detail-loc{
+  display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:12px 14px;font-size:14.5px;color:var(--ink);font-weight:600;box-shadow:var(--shadow);
+}
+.sess-detail-loc svg{width:17px;height:17px;stroke:var(--gold);fill:none;stroke-width:2;flex:0 0 auto;}
+.sess-speaker-chip{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px;
+  font-size:14px;color:var(--ink);box-shadow:var(--shadow);margin-bottom:8px;
+}
+.sess-speaker-chip:last-child{margin-bottom:0;}
+.sess-speaker-chip b{font-weight:700;}
+.sess-speaker-email{display:block;margin-top:4px;font-size:12.5px;color:var(--gold);text-decoration:none;word-break:break-all;}
+.sess-speaker-email:active{opacity:.7;}
+.sess-blurb{font-size:14.5px;line-height:1.55;color:var(--ink-soft);white-space:pre-wrap;}
+.sh-section-label + .sess-detail-loc,.sh-section-label + #sessSpeakers,.sh-section-label + .sess-blurb{margin-top:0;}
+#sessSessionsGap{height:18px;}
+
 /* ===================== MY NOTES ===================== */
 .mynotes .note-card{
   background:var(--card);border:1px solid var(--line);border-radius:13px;padding:13px 14px;
@@ -546,6 +575,34 @@ ol.steps li b{color:var(--ink);font-weight:700;}
     </div>
   </div>
 
+  <!-- SESSION DETAIL SHEET -->
+  <div class="sheet-scrim" id="sessScrim"></div>
+  <div class="sheet" id="sessSheet" role="dialog" aria-modal="true">
+    <div class="grip"></div>
+    <div class="sheet-head">
+      <span class="eyebrow" id="sessEyebrow"></span>
+      <div class="sh-name" id="sessTitle"></div>
+      <div class="sh-time-pill" id="sessTime"></div>
+    </div>
+    <div class="sheet-body">
+      <div id="sessLocWrap" style="display:none;margin-bottom:20px;">
+        <div class="sh-section-label">Location</div>
+        <div class="sess-detail-loc">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7-6.5-7-11.5a7 7 0 0 1 14 0C19 14.5 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+          <span id="sessLoc"></span>
+        </div>
+      </div>
+      <div id="sessSpeakersWrap" style="display:none;margin-bottom:20px;">
+        <div class="sh-section-label" id="sessSpeakersLabel">Speaker(s)</div>
+        <div id="sessSpeakers"></div>
+      </div>
+      <div id="sessBlurbWrap" style="display:none;">
+        <div class="sh-section-label">About this session</div>
+        <div class="sess-blurb" id="sessBlurb"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- TAB BAR -->
   <nav class="tabbar">
     <button class="tab active" data-view="agenda">
@@ -589,38 +646,80 @@ function logoHTML(key, cls){
 }
 
 /* ---------- AGENDA DATA (from the official 2026 agenda) ---------- */
+/* Each session can carry three optional detail fields shown in the tap-to-view popup:
+     loc:      "Room name" (e.g. "Rocky Mountain Ballroom")
+     speakers: ["Full Name — Title, Company", ...]  (overrides "presenter" if present)
+     blurb:    "One or two sentence session description."
+   Fill these in below — anything left blank just won't show that section in the popup. */
 const DAYS = [
   { date:"2026-09-01", label:"Tuesday, September 1", sessions:[
-    {t1:"9:30 AM",t2:"11:00 AM",title:"Board Meeting"},
-    {t1:"11:00 AM",t2:"12:00 PM",title:"Board Meeting with Committee Chairs"},
-    {t1:"12:00 PM",t2:"12:45 PM",title:"Board, Committee Chairs & Newcomers Lunch",kind:"meal",sponsor:"sentilink",eyebrow:"Sponsored by"},
-    {t1:"12:00 PM",t2:"1:00 PM",title:"Registration",kind:"reg",sponsor:"halsted",eyebrow:"Sponsored by"},
-    {t1:"1:00 PM",t2:"1:15 PM",title:"Opening Remarks",kind:"special"},
-    {t1:"1:15 PM",t2:"2:15 PM",title:"Economic Speaker",presenter:"Presented by Experian",kind:"feature"},
-    {t1:"2:15 PM",t2:"3:00 PM",title:"Digital Credentials Are Reaching Scale: What's Next?",presenter:"Presented by LexisNexis Risk Solutions",kind:"feature"},
-    {t1:"3:00 PM",t2:"3:15 PM",title:"Afternoon Break",kind:"break",sponsor:"neuanalytics",eyebrow:"Sponsored by"},
-    {t1:"3:15 PM",t2:"5:00 PM",title:"Collections Best Practices Roundtable"},
-    {t1:"3:15 PM",t2:"4:15 PM",title:"Beyond Device Financing: Protecting High-Value Telco Transactions with Identity Graph Intelligence",presenter:"Presented by Socure"},
-    {t1:"3:45 PM",t2:"4:15 PM",title:"Best Practices in B2B Credit Management Using Big Data",presenter:"Presented by CreditSafe"},
-    {t1:"4:15 PM",t2:"5:00 PM",title:"Credit & Fraud Best Practices Roundtable"},
+    {t1:"9:30 AM",t2:"11:00 AM",title:"Board Meeting",loc:"Conference H",blurb:""},
+    {t1:"11:00 AM",t2:"12:00 PM",title:"Board Meeting with Committee Chairs",loc:"Conference H",blurb:""},
+    {t1:"12:00 PM",t2:"12:45 PM",title:"Board, Committee Chairs & Newcomers Lunch",kind:"meal",sponsor:"sentilink",eyebrow:"Sponsored by",loc:"Skylight Room"},
+    {t1:"12:00 PM",t2:"1:00 PM",title:"Registration",kind:"reg",sponsor:"halsted",eyebrow:"Sponsored by",loc:""},
+    {t1:"1:00 PM",t2:"1:15 PM",title:"Opening Remarks",kind:"special",loc:"Pikes Peak",blurb:""},
+    {t1:"1:15 PM",t2:"2:15 PM",title:"Economic Speaker",presenter:"Presented by Experian",kind:"feature",loc:"Pikes Peak",
+      speakers:[{name:"Brodie Oldham",email:"Brodie.Oldham@experian.com",title:"VP US Commercial Data Sciences, Applied Sciences, and Consulting",company:"Experian"}],
+      blurb:"A clear-eyed read on what's really driving the economy right now — and what it means for telecom. Attendees will leave with an informed perspective on how today's economic shifts could shape operational strategy and long-term growth."},
+    {t1:"2:15 PM",t2:"3:00 PM",title:"Digital Credentials Are Reaching Scale: What's Next?",presenter:"Presented by LexisNexis Risk Solutions",kind:"feature",loc:"Pikes Peak",
+      speakers:[{name:"Terry Brenner",email:"terry.brenner@lexisnexisrisk.com",title:"Sr. Corporate Counsel",company:"LexisNexis Risk Solutions"}],
+      blurb:"Digital credentials are moving from concept to global trust infrastructure — over 160 countries are developing or deploying programs, with more than 5 billion digital IDs already issued. A look at how digital credentials, intelligent KYC, and emerging KYC Agents are reshaping identity, onboarding, authentication, and the customer experience."},
+    {t1:"3:00 PM",t2:"3:15 PM",title:"Afternoon Break",kind:"break",sponsor:"neuanalytics",eyebrow:"Sponsored by",loc:"Peak Foyer"},
+    {t1:"3:15 PM",t2:"5:00 PM",title:"Collections Best Practices Roundtable",loc:"Conference C",blurb:""},
+    {t1:"3:15 PM",t2:"4:15 PM",title:"Beyond Device Financing: Protecting High-Value Telco Transactions with Identity Graph Intelligence",presenter:"Presented by Socure",loc:"Conference D",
+      speakers:[{name:"Yarne Hermann",email:"yarne.hermann@socure.com",title:"Principal Product Manager, Identity, Synthetic Fraud & Graph Intelligence",company:"Socure"}],
+      blurb:"Fraud rings are exploiting device financing, prepaid accounts, and inventory liquidation schemes that slip past traditional KYC. See how identity graphs expose the hidden connections between transactions — surfacing money mule networks and synthetic identities before they trigger chargeoffs — with real-world telco case studies on curbing inventory leakage and recovery costs."},
+    {t1:"3:45 PM",t2:"4:15 PM",title:"Best Practices in B2B Credit Management Using Big Data",presenter:"Presented by CreditSafe",kind:"feature",loc:"Conference D",
+      speakers:[{name:"Yesinne Alvarez",email:"yesinne.alvarez@creditsafe.com",title:"Partnerships, Alliances and Trade Data",company:"CreditSafe"}],
+      blurb:"Great B2B credit decisions start with the right data. A look at weaving diverse data into the credit approval and review process — using automation to sharpen decisioning, monitor customers proactively, and integrate credit data into ERP, credit, and collections workflows."},
+    {t1:"4:15 PM",t2:"5:00 PM",title:"Credit & Fraud Best Practices Roundtable",loc:"Conference D",blurb:""},
     {t1:"5:30 PM",t2:"8:30 PM",title:"After Dark Event",loc:"Aspen Terrace",kind:"afterdark"},
   ]},
   { date:"2026-09-02", label:"Wednesday, September 2", sessions:[
-    {t1:"8:00 AM",t2:"8:45 AM",title:"Breakfast",kind:"meal",sponsor:"equifax",eyebrow:"Sponsored by"},
-    {t1:"8:15 AM",t2:"8:40 AM",title:"BAAB Meeting"},
-    {t1:"8:45 AM",t2:"9:45 AM",title:"Tracy LaTourette — Colorado's First Lady Fighter Pilot",kind:"keynote",eyebrow:"Keynote"},
-    {t1:"9:45 AM",t2:"10:00 AM",title:"Coffee Break",kind:"break",sponsor:"transunion",eyebrow:"Sponsored by"},
-    {t1:"10:00 AM",t2:"10:45 AM",title:"AI Agents in Risk Management: Safe Deployment and Real-World Use Cases",presenter:"Presented by Fairplay AI",kind:"feature"},
-    {t1:"11:00 AM",t2:"11:45 AM",title:"Reducing FPDs in Telecom Through Fraud Prevention",presenter:"Presented by SentiLink"},
-    {t1:"11:00 AM",t2:"11:45 AM",title:"Streamlining Collections: Smarter Strategies for Telecom"},
-    {t1:"11:45 AM",t2:"12:30 PM",title:"Lunch",kind:"meal",sponsor:"sentilink",eyebrow:"Sponsored by"},
-    {t1:"12:30 PM",t2:"1:15 PM",title:"The Evolution of AI-Driven Workflows in Telecom Revenue Management",kind:"feature"},
-    {t1:"1:30 PM",t2:"2:15 PM",title:"Driving Inclusion Through Credit Innovation: How Rental Data Expands Access",presenter:"Presented by TransUnion"},
-    {t1:"1:30 PM",t2:"2:15 PM",title:"The Empathy ROI: Why Human-Centric Collections Are the New Competitive Edge",presenter:"Presented by Equifax"},
-    {t1:"2:15 PM",t2:"2:30 PM",title:"Afternoon Break",kind:"break",sponsor:"provenir",eyebrow:"Sponsored by"},
-    {t1:"2:30 PM",t2:"3:15 PM",title:"Reshoring Without the Cost Shock: How AI and Digital Channels Redefine Contact Centers",presenter:"Presented by InDebted, True Accord & Valor",kind:"feature"},
-    {t1:"3:15 PM",t2:"4:15 PM",title:"Two Truths & A Lie",kind:"special"},
-    {t1:"4:15 PM",t2:"5:00 PM",title:"Cocktail Reception & Door Prizes",kind:"reception",sponsor:"fico",eyebrow:"Sponsored by"},
+    {t1:"8:00 AM",t2:"8:45 AM",title:"Breakfast",kind:"meal",sponsor:"equifax",eyebrow:"Sponsored by",loc:"Pikes Peak"},
+    {t1:"8:15 AM",t2:"8:40 AM",title:"BAAB Meeting",loc:"Conference C",blurb:""},
+    {t1:"8:45 AM",t2:"9:45 AM",title:"Tracy LaTourette — Colorado's First Lady Fighter Pilot",kind:"keynote",eyebrow:"Keynote",loc:"Pikes Peak",
+      speakers:[{name:"Tracy LaTourrette \u201cJackieO\u201d",title:"Colorado's First Lady Fighter Pilot"}],
+      blurb:"Opening Keynote: \u201cBuilding Resilience to Perform in the Storm\u2122\u201d. Full session description to be announced."},
+    {t1:"9:45 AM",t2:"10:00 AM",title:"Coffee Break",kind:"break",sponsor:"transunion",eyebrow:"Sponsored by",loc:"Peak Foyer"},
+    {t1:"10:00 AM",t2:"10:45 AM",title:"AI Agents in Risk Management: Safe Deployment and Real-World Use Cases",presenter:"Presented by Fairplay AI",kind:"feature",loc:"Pikes Peak",
+      speakers:[
+        {name:"Patrick Cadic",email:"pmc@fairplay.ai",title:"COO",company:"Fairplay AI"},
+        {name:"Abby Hogan",email:"abby@fairplay.ai",title:"SVP of Legal & Regulatory Affairs",company:"Fairplay AI"},
+        {name:"John Sun",title:"CEO",company:"Spring Labs"},
+        {name:"Delicia Reynolds Hand",email:"delicia.hand@consumer.org",title:"Senior Director, Digital Marketplace",company:"Consumer Reports"}
+      ],
+      blurb:"AI agents are moving from experimentation to production across fraud, KYC, credit underwriting, servicing, and collections. Fairplay AI hosts a panel exploring where agentic AI is gaining traction in risk management, the most promising use cases, and the controls needed to deploy it responsibly."},
+    {t1:"11:00 AM",t2:"11:45 AM",title:"Reducing FPDs in Telecom Through Fraud Prevention",presenter:"Presented by SentiLink",kind:"feature",loc:"Conference C",
+      speakers:[{name:"Emily Auer",email:"Emily.Auer@sentilink.com",title:"Strategic Account Executive",company:"SentiLink"}],
+      blurb:"Telecom fraud rates outpace nearly every other industry. A dig into 2025 nationwide fraud patterns and the three MOs doing the most damage — first-party fraud, identity theft, and synthetic fraud — plus how telcos can defend against sudden spikes and fast-spreading first-party trends."},
+    {t1:"11:00 AM",t2:"11:45 AM",title:"Streamlining Collections: Smarter Strategies for Telecom",presenter:"Presented by Experian",kind:"feature",loc:"Conference D",
+      speakers:[{name:"Matt Baltzer",email:"Matthew.Baltzer@experian.com",title:"Senior Director of Product Management",company:"Experian"}],
+      blurb:"As customer behavior and economic pressure shift, recovering overdue balances gets tougher. How advanced analytics, real-time portfolio insights, and predictive modeling help prioritize the right accounts, catch early signs of payment stress, and apply tailored treatments — while keeping the customer experience positive."},
+    {t1:"11:45 AM",t2:"12:30 PM",title:"Lunch",kind:"meal",sponsor:"sentilink",eyebrow:"Sponsored by",loc:"Pikes Peak"},
+    {t1:"12:30 PM",t2:"1:15 PM",title:"The Evolution of AI-Driven Workflows in Telecom Revenue Management",presenter:"Presented by FICO & KredosAi",kind:"feature",loc:"Pikes Peak",
+      speakers:[
+        {name:"Richard Pohlmann",email:"RichardPohlmann@fico.com",title:"Director, Product Management",company:"FICO"},
+        {name:"Scott Nadzan",email:"scott@kredosai.com",title:"CRO",company:"KredosAi"}
+      ],
+      blurb:"In telecom revenue management, every customer interaction — billing, collections, activation, disputes — is a moment that matters, where one misstep can spark churn or revenue leakage. FICO and KredosAi explore how AI agents trained on real customer behavior are reshaping pre-delinquency and early-stage collections to boost performance and retention."},
+    {t1:"1:30 PM",t2:"2:15 PM",title:"Driving Inclusion Through Credit Innovation: How Rental Data Expands Access",presenter:"Presented by TransUnion",kind:"feature",loc:"Conference C",
+      speakers:[{name:"Emily Sherman",email:"emily.sherman@transunion.com",title:"Strategic Product Manager and Go-to-Market Specialist",company:"TransUnion"}],
+      blurb:"Millions of consumers are locked out by traditional credit models. Recent VantageScore analysis shows on-time rental payments can make renters mortgage-eligible and lift scores for thin-file consumers — a look at how payment obligation data, starting with rental data, sharpens predictive performance and expands financial inclusion."},
+    {t1:"1:30 PM",t2:"2:15 PM",title:"The Empathy ROI: Why Human-Centric Collections Are the New Competitive Edge",presenter:"Presented by Equifax",kind:"feature",loc:"Conference D",
+      speakers:[{name:"Peter Ghiselli",email:"peter.ghiselli@equifax.com",title:"Vice President, US Emerging Markets",company:"Equifax"}],
+      blurb:"AI is everywhere right now, and for good reason — but it has real limits. How human-centric collections, powered by AI rather than replaced by it, can lift ROI and turn collections into a genuine competitive advantage."},
+    {t1:"2:15 PM",t2:"2:30 PM",title:"Afternoon Break",kind:"break",sponsor:"provenir",eyebrow:"Sponsored by",loc:"Peak Foyer"},
+    {t1:"2:30 PM",t2:"3:15 PM",title:"Reshoring Without the Cost Shock: How AI and Digital Channels Redefine Contact Centers",presenter:"Presented by InDebted, True Accord & Valor",kind:"feature",loc:"Pikes Peak",
+      speakers:[
+        {name:"Gordon Beck, III",email:"Gordon.Beck@ValorVIP.com",title:"Executive Vice President",company:"Valor Intelligent Processing"},
+        {name:"John Craven, Sr.",email:"john.cravensr@cox.com",title:"Director of Operations, Center of Excellence",company:"Cox Communications"},
+        {name:"Kelly Paul",email:"kelly.paul@trueaccord.com",title:"Sr. Director, Client Experience",company:"TrueAccord"},
+        {name:"Chuck Stigers",email:"chuck.stigers@indebted.co",title:"VP of Business Development"}
+      ],
+      blurb:"Reshoring contact center operations doesn't have to come with a cost shock. InDebted, TrueAccord, and Valor Intelligent Processing show how agentic AI and digital channels are redefining the modern contact center — delivering domestic-quality service without the traditional price tag, backed by real case-study data on recoveries and cost."},
+    {t1:"3:15 PM",t2:"4:15 PM",title:"Two Truths & A Lie",kind:"special",loc:"Pikes Peak",blurb:""},
+    {t1:"4:15 PM",t2:"5:00 PM",title:"Cocktail Reception & Door Prizes",kind:"reception",sponsor:"fico",eyebrow:"Sponsored by",loc:"Pikes Peak"},
   ]},
 ];
 const AFTER_DARK = ["aci","bectran","cbe","fico","halsted","harris","incode","indebted","lexisnexis","moodys","revspring","rnn","sentilink","sequium","sunrise","transunion","trueaccord","valor"];
@@ -692,7 +791,7 @@ const SEED_PEOPLE = [
   {id:"e:sam.mulholland@sentilink.com",name:"Sam Mullholland",company:"SentiLink",title:"Head of Strategy & Operations",role:"Affiliate",email:"sam.mulholland@sentilink.com",sessions:[]},
   {id:"e:shawn.murray@trueaccord.com",name:"Shawn Murray",company:"TrueAccord",title:"Director, Client Management",role:"Affiliate",email:"shawn.murray@trueaccord.com",sessions:[]},
   {id:"e:ken.musmacker@lexisnexisrisk.com",name:"Ken Musmacker",company:"LexisNexis",title:"Sales Director",role:"Affiliate",email:"ken.musmacker@lexisnexisrisk.com",sessions:[]},
-  {id:"scott-nadzan-kredos-ai",name:"Scott Nadzan",company:"Kredos AI",title:"CRO",role:"Affiliate",email:"",sessions:[]},
+  {id:"scott-nadzan-kredos-ai",name:"Scott Nadzan",company:"Kredos AI",title:"CRO",role:"Affiliate",email:"scott@kredosai.com",sessions:[]},
   {id:"e:pran@halstedfinancial.com",name:"Pran Navanandan",company:"Halsted Financial Services",title:"Managing Member",role:"Affiliate",email:"pran@halstedfinancial.com",sessions:[]},
   {id:"e:bn2534@att.com",name:"Brian Newcomb",company:"AT&T",title:"Director Credit Policy and Strategy",role:"Voting Member",email:"bn2534@att.com",sessions:[]},
   {id:"e:matthew.norton@lexisnexisrisk.com",name:"Matt Norton",company:"LexisNexis Risk Solutions",title:"Principal Customer Success Manager",role:"Affiliate",email:"matthew.norton@lexisnexisrisk.com",sessions:[]},
@@ -858,11 +957,47 @@ function renderAgenda(){
     inner+=`<div class="title">${s.title}</div>`;
     if(s.presenter) inner+=`<div class="presenter">${s.presenter}</div>`;
     if(s.sponsor) inner+=`<div class="sponsor-chip">${logoHTML(s.sponsor)}</div>`;
+    if(s.loc) inner+=`<div class="sess-loc-row"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.5-7-11.5a7 7 0 0 1 14 0C19 14.5 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>${s.loc}</div>`;
     inner+=`</div>`;
     el.innerHTML=inner;
+    el.onclick=()=>openSessSheet(s);
     tl.appendChild(el);
   });
 }
+
+/* ---------- session detail sheet ---------- */
+function openSessSheet(s){
+  const kindLabel = s.eyebrow || ({feature:"Education Session",keynote:"Keynote",special:"Special Event",reception:"Reception",meal:"Meal",break:"Break",reg:"Registration"}[s.kind] || "Session");
+  $("#sessEyebrow").textContent = kindLabel;
+  $("#sessTitle").textContent = s.title;
+  $("#sessTime").textContent = s.t1 + " – " + s.t2;
+
+  const locWrap=$("#sessLocWrap");
+  if(s.loc){ locWrap.style.display="block"; $("#sessLoc").textContent=s.loc; }
+  else locWrap.style.display="none";
+
+  const speakers = (s.speakers && s.speakers.length) ? s.speakers : (s.presenter ? [s.presenter] : []);
+  const spWrap=$("#sessSpeakersWrap");
+  if(speakers.length){
+    spWrap.style.display="block";
+    $("#sessSpeakersLabel").textContent = speakers.length>1 ? "Speakers" : "Speaker";
+    $("#sessSpeakers").innerHTML = speakers.map(sp=>{
+      if(typeof sp==="string") return `<div class="sess-speaker-chip">${sp}</div>`;
+      const mail = sp.email ? `<a class="sess-speaker-email" href="mailto:${sp.email}" onclick="event.stopPropagation()">${sp.email}</a>` : "";
+      return `<div class="sess-speaker-chip"><b>${sp.name||""}</b>${sp.title?" — "+sp.title:""}${sp.company?" · "+sp.company:""}${mail}</div>`;
+    }).join("");
+  } else spWrap.style.display="none";
+
+  const blWrap=$("#sessBlurbWrap");
+  if(s.blurb){ blWrap.style.display="block"; $("#sessBlurb").textContent=s.blurb; }
+  else blWrap.style.display="none";
+
+  $("#sessScrim").classList.add("open"); $("#sessSheet").classList.add("open");
+}
+function closeSessSheet(){
+  $("#sessScrim").classList.remove("open"); $("#sessSheet").classList.remove("open");
+}
+$("#sessScrim").onclick=closeSessSheet;
 function afterDarkEl(s){
   const el=document.createElement("div"); el.className="afterdark";
   let chips = AFTER_DARK.map(k=>`<div class="ad-chip">${logoHTML(k)}</div>`).join("");
