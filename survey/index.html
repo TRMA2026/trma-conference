@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRMA 2026 Fall Conference — Post-Conference Survey</title>
+<meta name="description" content="Share your feedback on the TRMA 2026 Fall Conference in Denver.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0d1f3c; --gold:#c9a227; --cream:#f5f2ed; --ground:#ece7df;
+  --card:#ffffff; --ink:#1a2332; --ink-soft:#5a6070; --ink-faint:#8b8f9c;
+  --line:#e2ddd3; --ok:#2f7d55; --err:#b23b3b;
+  --shadow:0 1px 2px rgba(13,31,60,.06), 0 4px 16px rgba(13,31,60,.05);
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;}
+
+/* ---------- header ---------- */
+.masthead{background:var(--navy);color:#fff;padding:34px 20px 30px;text-align:center;border-bottom:3px solid var(--gold)}
+.masthead .kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:12px}
+.masthead h1{font-family:var(--serif);font-weight:600;font-size:clamp(26px,5vw,40px);line-height:1.15;margin:0 0 8px}
+.masthead .sub{color:#c3cbdb;font-size:14px;margin:0}
+.masthead .rule{width:52px;height:2px;background:var(--gold);margin:18px auto 0}
+
+/* ---------- progress ---------- */
+.progress-wrap{position:sticky;top:0;z-index:50;background:rgba(245,242,237,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.progress-inner{max-width:820px;margin:0 auto;padding:9px 20px;display:flex;align-items:center;gap:12px}
+.bar{flex:1;height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0%;background:var(--gold);border-radius:99px;transition:width .3s ease}
+.pct{font-size:12px;font-weight:700;color:var(--ink-soft);font-variant-numeric:tabular-nums;min-width:76px;text-align:right}
+
+/* ---------- layout ---------- */
+main{max-width:820px;margin:0 auto;padding:26px 20px 60px}
+.intro{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;box-shadow:var(--shadow);margin-bottom:26px}
+.intro p{margin:0 0 10px;color:var(--ink-soft);font-size:15px}
+.intro p:last-child{margin-bottom:0}
+.intro strong{color:var(--ink)}
+
+section{margin-bottom:34px}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin:0 0 4px}
+.sec-num{font-family:var(--serif);font-size:13px;font-weight:600;color:var(--gold);letter-spacing:.1em}
+.sec-head h2{font-family:var(--serif);font-weight:600;font-size:24px;margin:0;line-height:1.2}
+.sec-note{color:var(--ink-faint);font-size:13.5px;margin:0 0 16px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:14px}
+.card.session{border-left:3px solid var(--line);transition:border-color .2s}
+.card.session.answered{border-left-color:var(--gold)}
+.card.session.skipped{opacity:.6}
+
+.s-meta{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin-bottom:6px}
+.s-title{font-family:var(--serif);font-weight:600;font-size:18.5px;line-height:1.28;margin:0 0 6px}
+.s-presenter{font-size:12.5px;color:var(--gold);font-weight:700;margin:0 0 8px}
+.s-speakers{font-size:13.5px;color:var(--ink-soft);margin:0 0 16px}
+.s-speakers b{color:var(--ink);font-weight:600}
+
+/* ---------- question rows ---------- */
+.q{padding:13px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:none;padding-top:4px}
+.q > label.qlabel{display:block;font-size:14px;font-weight:600;margin-bottom:9px}
+.q .hint{font-weight:400;color:var(--ink-faint);font-size:12.5px}
+
+.scale{display:flex;flex-wrap:wrap;gap:6px}
+.scale button{
+  flex:1 1 auto;min-width:52px;padding:9px 6px;border:1px solid var(--line);background:#fff;
+  border-radius:9px;font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink-soft);
+  cursor:pointer;transition:all .14s ease;line-height:1.25
+}
+.scale button small{display:block;font-size:10px;font-weight:500;color:var(--ink-faint);margin-top:2px;letter-spacing:.02em}
+.scale button:hover{border-color:var(--gold);color:var(--ink)}
+.scale button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.scale button[aria-pressed="true"] small{color:#b9c2d3}
+.scale button.na{flex:0 0 auto;min-width:104px;color:var(--ink-faint)}
+.scale .spacer{flex:0 0 104px}
+.scale-legend{display:none;font-size:11.5px;color:var(--ink-faint);margin-top:6px}
+@media(max-width:560px){
+  .scale{gap:5px}
+  .scale button{flex:1 1 0;min-width:0;padding:11px 2px;font-size:14px}
+  .scale button small{display:none}
+  .scale button.na{flex:1 1 100%;min-width:0;order:9;padding:9px;font-size:13px}
+  .scale .spacer{display:none}
+  .scale-legend{display:block}
+}
+.scale button.na[aria-pressed="true"]{background:var(--ink-faint);border-color:var(--ink-faint);color:#fff}
+
+.nps{display:flex;flex-wrap:wrap;gap:5px}
+.nps button{flex:1 1 auto;min-width:38px;padding:10px 2px;border:1px solid var(--line);background:#fff;border-radius:8px;font-family:var(--sans);font-weight:700;font-size:13px;color:var(--ink-soft);cursor:pointer;transition:all .14s}
+.nps button:hover{border-color:var(--gold)}
+.nps button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.nps-ends{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-faint);margin-top:6px}
+
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choices button{padding:9px 15px;border:1px solid var(--line);background:#fff;border-radius:99px;font-family:var(--sans);font-size:13.5px;font-weight:500;color:var(--ink-soft);cursor:pointer;transition:all .14s}
+.choices button:hover{border-color:var(--gold);color:var(--ink)}
+.choices button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+
+textarea,input[type=text],input[type=email]{
+  width:100%;font-family:var(--sans);font-size:14.5px;color:var(--ink);background:#fdfcfa;
+  border:1px solid var(--line);border-radius:9px;padding:11px 13px;resize:vertical
+}
+textarea{min-height:74px}
+textarea:focus,input:focus{outline:none;border-color:var(--gold);background:#fff}
+.reveal{display:none}
+.reveal.on{display:block}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+
+.daybar{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--navy);border-bottom:2px solid var(--gold);padding-bottom:6px;margin:26px 0 14px;display:flex;justify-content:space-between;align-items:baseline}
+.daybar span{font-family:var(--sans);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+
+/* ---------- submit ---------- */
+.submit-card{background:var(--navy);border-radius:14px;padding:26px;text-align:center;color:#fff}
+.submit-card h3{font-family:var(--serif);font-size:21px;margin:0 0 6px;font-weight:600}
+.submit-card p{color:#b9c2d3;font-size:13.5px;margin:0 0 18px}
+button.submit{background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:14px 40px;font-family:var(--sans);font-size:15.5px;font-weight:700;cursor:pointer;transition:transform .12s,box-shadow .12s;letter-spacing:.01em}
+button.submit:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 18px rgba(201,162,39,.35)}
+button.submit:disabled{opacity:.55;cursor:not-allowed}
+.msg{margin-top:14px;font-size:13.5px;font-weight:600;min-height:20px}
+.msg.err{color:#ffc9c9}
+
+.thanks{display:none;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:46px 28px;text-align:center;box-shadow:var(--shadow)}
+.thanks.on{display:block}
+.thanks .mark{width:52px;height:52px;border-radius:99px;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:27px;margin:0 auto 16px;font-weight:700}
+.thanks h2{font-family:var(--serif);font-size:26px;margin:0 0 10px;font-weight:600}
+.thanks p{color:var(--ink-soft);margin:0 auto;max-width:430px;font-size:15px}
+
+footer{text-align:center;padding:26px 20px 40px;color:var(--ink-faint);font-size:11.5px;letter-spacing:.05em}
+footer b{color:var(--ink-soft);letter-spacing:.09em}
+.draft-note{text-align:center;font-size:12px;color:var(--ink-faint);margin-top:10px}
+.deadline{border-top:1px solid var(--line);padding-top:10px;margin-top:14px !important;color:var(--navy) !important;font-size:14px !important}
+.deadline strong{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">Telecommunications Risk Management Association</div>
+  <h1>2026 Fall Conference<br>Post-Conference Survey</h1>
+  <p class="sub">Inverness Denver, A Hilton Golf &amp; Spa Resort &nbsp;·&nbsp; September 1–2, 2026</p>
+  <div class="rule"></div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <div class="bar"><i id="barfill"></i></div>
+    <div class="pct" id="pct">0% complete</div>
+  </div>
+</div>
+
+<main>
+  <div id="formwrap">
+
+  <div class="intro">
+    <p><strong>Thank you for joining us in Denver.</strong> Your feedback directly shapes the 2027 program — which sessions we bring back, which speakers we invite again, and where we host.</p>
+    <p>This takes about <strong>5–7 minutes</strong>. Responses are <strong>anonymous</strong>; contact details at the end are optional. Skip anything that doesn't apply — nothing here is required except a single overall rating.</p>
+    <p class="deadline">Please respond by <strong>Tuesday, September 16</strong>.</p>
+  </div>
+
+  <!-- ============ 1. ABOUT YOU ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>About You</h2></div>
+    <p class="sec-note">Helps us read the results by audience. Still anonymous.</p>
+    <div class="card">
+      <div class="q">
+        <label class="qlabel">Which best describes you?</label>
+        <div class="choices" data-single="respondent_type">
+          <button type="button" data-v="voting_member">Voting Member (Carrier)</button>
+          <button type="button" data-v="affiliate_sponsor">Affiliate / Sponsor</button>
+          <button type="button" data-v="guest">Guest / Prospect</button>
+          <button type="button" data-v="speaker">Speaker</button>
+          <button type="button" data-v="staff">TRMA Staff / Board</button>
+        </div>
+      </div>
+      <div class="q">
+        <label class="qlabel">Was this your first TRMA conference?</label>
+        <div class="choices" data-single="first_time">
+          <button type="button" data-v="yes">Yes, first time</button>
+          <button type="button" data-v="no">No, I've attended before</button>
+        </div>
+      </div>
+      <div class="q">
+        <label class="qlabel">Which days did you attend? <span class="hint">Select all that apply</span></label>
+        <div class="choices" data-multi="days">
+          <button type="button" data-v="day1">Tuesday, Sept 1</button>
+          <button type="button" data-v="day2">Wednesday, Sept 2</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. SESSIONS ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Education Sessions</h2></div>
+    <p class="sec-note">Rate only the sessions you attended — choose “Didn't attend” to skip. Speaker feedback is shared with presenters in aggregate.</p>
+    <div id="sessions"></div>
+  </section>
+
+  <!-- ============ 3. APP ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Conference App</h2></div>
+    <p class="sec-note">The web app with the agenda, session details, and attendee roster.</p>
+    <div class="card">
+      <div class="q"><label class="qlabel">Did you use the Conference App?</label>
+        <div class="choices" data-single="app_used">
+          <button type="button" data-v="yes">Yes</button>
+          <button type="button" data-v="no">No</button>
+          <button type="button" data-v="didnt_know">I didn't know about it</button>
+        </div>
+      </div>
+
+      <div id="appblock" class="reveal">
+        <div class="q">
+          <label class="qlabel">Did you add it to your home screen? <span class="hint">It installs like an app — no app store download</span></label>
+          <div class="choices" data-single="app.installed">
+            <button type="button" data-v="yes">Yes, added it</button>
+            <button type="button" data-v="browser">No, just used it in my browser</button>
+            <button type="button" data-v="tried_failed">Tried, couldn't figure it out</button>
+            <button type="button" data-v="didnt_know">Didn't know I could</button>
+          </div>
+        </div>
+        <div class="q" data-rate="app.overall"></div>
+        <div class="q" data-rate="app.ease"></div>
+        <div class="q" data-rate="app.schedule"></div>
+        <div class="q" data-rate="app.roster"></div>
+        <div class="q">
+          <label class="qlabel">What would make the app more useful next year? <span class="hint">Optional</span></label>
+          <textarea data-text="app.comment" placeholder="Features you wanted, things that didn't work, anything you loved…"></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. EVENTS ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Networking &amp; Events</h2></div>
+    <p class="sec-note">Networking overall, then the individual events.</p>
+
+    <div class="card">
+      <h3 class="s-title">Networking Overall</h3>
+      <p class="s-speakers">Across the whole conference — sessions, meals, breaks, and evenings.</p>
+      <div class="q" data-rate="networking.new_people"></div>
+      <div class="q" data-rate="networking.quality"></div>
+      <div class="q" data-rate="networking.time"></div>
+      <div class="q" data-rate="networking.roundtables"></div>
+      <div class="q" data-rate="networking.newcomers"></div>
+      <div class="q">
+        <label class="qlabel">How could we make networking better in 2027?</label>
+        <textarea data-text="networking.comment" placeholder="More unstructured time, seated dinners, an app-based matchmaker, name-tag changes…"></textarea>
+      </div>
+    </div>
+
+    <div id="events"></div>
+  </section>
+
+  <!-- ============ 5. FOOD ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>Food &amp; Beverage</h2></div>
+    <p class="sec-note">Across all meals, breaks, and receptions.</p>
+    <div class="card">
+      <div class="q" data-rate="food.quality"></div>
+      <div class="q" data-rate="food.variety"></div>
+      <div class="q" data-rate="food.dietary"></div>
+      <div class="q" data-rate="food.timing"></div>
+      <div class="q">
+        <label class="qlabel">Comments on food &amp; beverage <span class="hint">Optional</span></label>
+        <textarea data-text="food.comment" placeholder="What worked, what didn't…"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. HOTEL ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>The Venue</h2></div>
+    <p class="sec-note">Inverness Denver, A Hilton Golf &amp; Spa Resort.</p>
+    <div class="card">
+      <div class="q" data-rate="hotel.rooms"></div>
+      <div class="q" data-rate="hotel.amenities"></div>
+      <div class="q" data-rate="hotel.location"></div>
+      <div class="q">
+        <label class="qlabel">Comments on the hotel <span class="hint">Optional</span></label>
+        <textarea data-text="hotel.comment" placeholder="Rooms, service, meeting space, getting there…"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. SPONSOR (conditional) ============ -->
+  <section id="sponsorsec" class="reveal">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Sponsor Feedback</h2></div>
+    <p class="sec-note">You indicated you're an Affiliate or Sponsor — a few extra questions.</p>
+    <div class="card">
+      <div class="q"><label class="qlabel">Did your company sponsor this conference?</label>
+        <div class="choices" data-single="sponsor.sponsored">
+          <button type="button" data-v="yes">Yes</button>
+          <button type="button" data-v="no">No, attended only</button>
+        </div>
+      </div>
+      <div id="sponsorblock" class="reveal">
+        <div class="q" data-rate="sponsor.value"></div>
+        <div class="q" data-rate="sponsor.connections"></div>
+        <div class="q" data-rate="sponsor.visibility"></div>
+        <div class="q"><label class="qlabel">Would you sponsor a TRMA conference again?</label>
+          <div class="choices" data-single="sponsor.again">
+            <button type="button" data-v="definitely">Definitely</button>
+            <button type="button" data-v="probably">Probably</button>
+            <button type="button" data-v="unsure">Unsure</button>
+            <button type="button" data-v="probably_not">Probably not</button>
+          </div>
+        </div>
+        <div class="q">
+          <label class="qlabel">How could we deliver more value to sponsors? <span class="hint">Optional</span></label>
+          <textarea data-text="sponsor.comment" placeholder="Placement, lead quality, speaking opportunities, format…"></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. OVERALL ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num" id="overallnum">07</span><h2>Overall Experience</h2></div>
+    <p class="sec-note">The part the board reads first.</p>
+    <div class="card">
+      <div class="q" data-rate="overall.value"></div>
+      <div class="q" data-rate="overall.expectations"></div>
+      <div class="q" data-rate="overall.speakers"></div>
+      <div class="q" data-rate="overall.content"></div>
+      <div class="q" data-rate="overall.registration"></div>
+
+      <div class="q">
+        <label class="qlabel">How likely are you to recommend the TRMA conference to a colleague?</label>
+        <div class="nps" data-nps="nps"></div>
+        <div class="nps-ends"><span>0 — Not at all likely</span><span>10 — Extremely likely</span></div>
+      </div>
+
+      <div class="q">
+        <label class="qlabel">Will you attend the 2027 conference?</label>
+        <div class="choices" data-single="attend_again">
+          <button type="button" data-v="definitely">Definitely</button>
+          <button type="button" data-v="probably">Probably</button>
+          <button type="button" data-v="unsure">Unsure</button>
+          <button type="button" data-v="probably_not">Probably not</button>
+        </div>
+      </div>
+
+      <div class="q">
+        <label class="qlabel">What was the single best part of the conference?</label>
+        <textarea data-text="overall.best" placeholder="A session, a conversation, a moment…"></textarea>
+      </div>
+      <div class="q">
+        <label class="qlabel">What one thing should we change for 2027?</label>
+        <textarea data-text="overall.improve" placeholder="Be direct — this is the most useful box on the page."></textarea>
+      </div>
+      <div class="q">
+        <label class="qlabel">Anything else you'd like us to know? <span class="hint">Optional</span></label>
+        <textarea data-text="overall.other" placeholder=""></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 9. CONTACT ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num" id="contactnum">08</span><h2>Stay in Touch <span style="font-family:var(--sans);font-size:12px;font-weight:400;color:var(--ink-faint);letter-spacing:.05em;">— Optional</span></h2></div>
+    <p class="sec-note">Leave blank to stay completely anonymous. We'll only reach out if you've asked us to.</p>
+    <div class="card">
+      <div class="q">
+        <div class="grid2">
+          <div><label class="qlabel">Name</label><input type="text" data-text="contact.name" autocomplete="name"></div>
+          <div><label class="qlabel">Company</label><input type="text" data-text="contact.company" autocomplete="organization"></div>
+        </div>
+      </div>
+      <div class="q">
+        <label class="qlabel">Email</label>
+        <input type="email" data-text="contact.email" autocomplete="email" placeholder="you@company.com">
+      </div>
+      <div class="q">
+        <label class="qlabel">I'd like to… <span class="hint">Select all that apply</span></label>
+        <div class="choices" data-multi="contact.interests">
+          <button type="button" data-v="speak">Speak at a future conference</button>
+          <button type="button" data-v="committee">Join a committee</button>
+          <button type="button" data-v="sponsor">Learn about sponsorship</button>
+          <button type="button" data-v="followup">Be contacted about my feedback</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="submit-card">
+    <h3>Ready to submit?</h3>
+    <p>You can't edit your response after submitting.</p>
+    <button type="button" class="submit" id="submitBtn">Submit My Feedback</button>
+    <div class="msg" id="msg"></div>
+  </div>
+  <p class="draft-note" id="draftnote"></p>
+
+  </div>
+
+  <div class="thanks" id="closed">
+    <div class="mark" style="background:var(--navy);color:var(--gold)">✓</div>
+    <h2>This survey has closed.</h2>
+    <p>Feedback for the 2026 Fall Conference closed on September 16. Thank you to everyone who responded — the program committee is putting your input to work on 2027.</p>
+    <p style="margin-top:14px">Questions? Email <a href="mailto:tclark@trmanet.org" style="color:var(--navy)">tclark@trmanet.org</a>.</p>
+  </div>
+
+  <div class="thanks" id="thanks">
+    <div class="mark">✓</div>
+    <h2>Thank you, and safe travels.</h2>
+    <p>Your feedback is in. The program committee reviews every response as we build the 2027 conference — including the call for speakers coming soon.</p>
+  </div>
+</main>
+
+<footer>
+  <b>TELECOMMUNICATIONS RISK MANAGEMENT ASSOCIATION</b><br>
+  www.trmanet.org &nbsp;·&nbsp; Denver, Colorado &nbsp;·&nbsp; September 1–2, 2026
+</footer>
+
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const SUPABASE_URL  = "https://hktzvlkrimpfreeoehsi.supabase.co";
+const SUPABASE_KEY  = "sb_publishable_IiktW4Ks_6W1T6HqB-EyVA_htFUOyGQ";
+const TABLE         = "conf_survey_responses";
+const CONFERENCE    = "TRMA 2026 Fall - Denver";
+const DRAFT_KEY     = "trma2026_survey_draft";
+// Survey closes end of day Tuesday, September 16, 2026 (Central).
+// This is also enforced server-side by the Supabase RLS policy — changing it here alone does nothing.
+const CLOSE_DATE    = new Date("2026-09-16T23:59:59-05:00");
+
+/* ============================================================
+   SESSION DATA
+   ============================================================ */
+const DAYS = [
+ { label:"Day 1 · Tuesday, September 1", tag:"Opening Day", sessions:[
+  {id:"d1-economic", time:"1:15 – 2:15 PM", room:"Pikes Peak", title:"Changing the World: US Macro and Credit Trends",
+   presenter:"Presented by Experian",
+   speakers:[["Brodie Oldham","VP US Commercial Data Sciences, Applied Sciences & Consulting · Experian"]]},
+  {id:"d1-credentials", time:"2:15 – 3:00 PM", room:"Pikes Peak", title:"Digital Credentials Are Reaching Scale: What's Next?",
+   presenter:"Presented by LexisNexis Risk Solutions",
+   speakers:[["Terry Brenner","Sr. Corporate Counsel · LexisNexis Risk Solutions"]]},
+  {id:"d1-socure", time:"3:15 – 4:15 PM", room:"Conference D", title:"Beyond Device Financing: Protecting High-Value Telco Transactions with Identity Graph Intelligence",
+   presenter:"Presented by Socure",
+   speakers:[["Cason Coplin","Head of CRA · Socure"]]},
+  {id:"d1-creditsafe", time:"3:45 – 4:15 PM", room:"Conference D", title:"Best Practices in B2B Credit Management Using Big Data",
+   presenter:"Presented by CreditSafe",
+   speakers:[["Yesinne Alvarez","Partnerships, Alliances & Trade Data · CreditSafe"]]},
+  {id:"d1-rt-collections", time:"3:15 – 5:00 PM", room:"Conference C", title:"Collections Best Practices Roundtable",
+   presenter:"", speakers:[]},
+  {id:"d1-rt-creditfraud", time:"4:15 – 5:00 PM", room:"Conference D", title:"Credit & Fraud Best Practices Roundtable",
+   presenter:"", speakers:[]}
+ ]},
+ { label:"Day 2 · Wednesday, September 2", tag:"Conference Day", sessions:[
+  {id:"d2-keynote", time:"8:45 – 9:45 AM", room:"Pikes Peak", title:"Keynote — Building Resilience to Perform in the Storm",
+   presenter:"Opening Keynote",
+   speakers:[["Tracy LaTourrette “JackieO”","Colorado's First Lady Fighter Pilot"]]},
+  {id:"d2-fairplay", time:"10:00 – 10:45 AM", room:"Pikes Peak", title:"AI Agents in Risk Management: Safe Deployment and Real-World Use Cases",
+   presenter:"Presented by FairPlay AI",
+   speakers:[["Abby Hogan","SVP of Legal & Regulatory Affairs · FairPlay AI"],
+             ["Delicia Reynolds Hand","Senior Director, Digital Marketplace · Consumer Reports"],
+             ["Kevin Lewis","Co-Founder and CRO · Spring Labs"]]},
+  {id:"d2-sentilink", time:"11:00 – 11:45 AM", room:"Conference C", title:"Reducing FPDs in Telecom Through Fraud Prevention",
+   presenter:"Presented by SentiLink",
+   speakers:[["Emily Auer","Strategic Account Executive · SentiLink"],["Sam Mulholland","Head of Strategy & Operations · SentiLink"]]},
+  {id:"d2-experian-coll", time:"11:00 – 11:45 AM", room:"Conference D", title:"Streamlining Collections: Smarter Strategies for Telecom",
+   presenter:"Presented by Experian",
+   speakers:[["Matt Baltzer","Senior Director of Product Management · Experian"]]},
+  {id:"d2-fico", time:"12:30 – 1:15 PM", room:"Pikes Peak", title:"The Evolution of AI-Driven Workflows in Telecom Revenue Management",
+   presenter:"Presented by FICO & KredosAi",
+   speakers:[["Richard Pohlmann","Director, Product Management · FICO"],["Scott Nadzan","CRO · KredosAi"]]},
+  {id:"d2-transunion", time:"1:30 – 2:15 PM", room:"Conference C", title:"Driving Inclusion Through Credit Innovation: How Rental Data Expands Access",
+   presenter:"Presented by TransUnion",
+   speakers:[["Emily Sherman","Strategic Product Manager & Go-to-Market Specialist · TransUnion"]]},
+  {id:"d2-equifax", time:"1:30 – 2:15 PM", room:"Conference D", title:"The Empathy ROI: Why Human-Centric Collections Are the New Competitive Edge",
+   presenter:"Presented by Equifax",
+   speakers:[["Peter Ghiselli","Vice President, US Emerging Markets · Equifax"]]},
+  {id:"d2-reshoring", time:"2:30 – 3:15 PM", room:"Pikes Peak", title:"Reshoring Without the Cost Shock: How AI and Digital Channels Redefine Contact Centers",
+   presenter:"Presented by InDebted, True Accord & Valor Intelligent Processing",
+   speakers:[["Gordon Beck, III","Valor Intelligent Processing"],["Chuck Stigers","InDebted"],["Kelly Paul","True Accord"],["John Craven, Sr.","Cox Communications"]]}
+ ]}
+];
+
+const EVENTS = [
+ {id:"ev-afterdark", title:"After Dark", meta:"Tuesday · 5:30 – 8:30 PM · Aspen Terrace",
+  blurb:"Food &amp; beverages, charity event, music, and networking.",
+  rates:[["food","Food &amp; beverage"],["charity","The charity event"],["music","Music &amp; atmosphere"],["networking","Networking opportunity"],["overall","After Dark overall"]]},
+ {id:"ev-reception", title:"Cocktail Reception &amp; Door Prizes", meta:"Wednesday · 4:15 – 5:00 PM · Sunrise Room",
+  blurb:"The closing reception, sponsored by FICO.",
+  rates:[["overall","The reception overall"],["networking","Networking opportunity"]]},
+ {id:"ev-twotruths", title:"Two Truths &amp; A Lie", meta:"Wednesday · 3:15 – 4:15 PM · Pikes Peak",
+  blurb:"The member-participation game session.",
+  rates:[["overall","Two Truths &amp; A Lie overall"],["again","Bring it back in 2027?"]]}
+];
+
+const RATE_LABELS = {
+ "app.overall":"The app overall",
+ "app.ease":"Ease of use — finding what you needed",
+ "app.schedule":"Usefulness of the agenda &amp; session details",
+ "app.roster":"Usefulness of the attendee roster",
+ "networking.new_people":"Opportunities to meet people you didn't already know",
+ "networking.quality":"Quality of the connections you made",
+ "networking.time":"Enough unstructured time to actually talk",
+ "networking.roundtables":"The roundtable discussion format",
+ "networking.newcomers":"How welcoming it felt to newcomers",
+ "food.quality":"Overall quality of the food",
+ "food.variety":"Variety &amp; selection",
+ "food.dietary":"Accommodation of dietary needs",
+ "food.timing":"Timing &amp; service of meals and breaks",
+ "hotel.rooms":"Guest rooms",
+ "hotel.amenities":"Hotel amenities",
+ "hotel.location":"Location &amp; getting there",
+ "sponsor.value":"Overall value of your sponsorship",
+ "sponsor.connections":"Quality of connections made",
+ "sponsor.visibility":"Visibility your company received",
+ "overall.value":"Overall value of the conference",
+ "overall.expectations":"How well it met your expectations",
+ "overall.speakers":"Overall quality of the speakers",
+ "overall.content":"Relevance of the content to your role",
+ "overall.registration":"Value for the registration fee"
+};
+
+const SCALE = [[1,"Poor"],[2,"Fair"],[3,"Good"],[4,"Very good"],[5,"Excellent"]];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = { sessions:{}, app:{}, networking:{}, events:{}, food:{}, hotel:{}, overall:{}, sponsor:{}, contact:{} };
+const flat  = {}; // top-level single/multi answers
+
+function setPath(path, val){
+  const p = path.split(".");
+  if(p.length === 1){ flat[p[0]] = val; return; }
+  if(!state[p[0]]) state[p[0]] = {};
+  state[p[0]][p[1]] = val;
+}
+function getPath(path){
+  const p = path.split(".");
+  if(p.length === 1) return flat[p[0]];
+  return state[p[0]] ? state[p[0]][p[1]] : undefined;
+}
+
+/* ============================================================
+   BUILDERS
+   ============================================================ */
+function scaleRow(path, label, opts){
+  opts = opts || {};
+  const btns = SCALE.map(([v,l]) =>
+    `<button type="button" data-v="${v}">${v}<small>${l}</small></button>`).join("");
+  const na = opts.na ? `<button type="button" class="na" data-v="na">${opts.naLabel||"N/A"}</button>`
+                     : (opts.align ? `<span class="spacer" aria-hidden="true"></span>` : "");
+  return `<label class="qlabel">${label}</label><div class="scale" data-rate-path="${path}">${btns}${na}</div>`
+       + `<div class="scale-legend">1 = Poor &nbsp;·&nbsp; 5 = Excellent</div>`;
+}
+
+/* -- sessions -- */
+(function buildSessions(){
+  const host = document.getElementById("sessions");
+  let html = "";
+  DAYS.forEach(day => {
+    html += `<div class="daybar">${day.label}<span>${day.tag}</span></div>`;
+    day.sessions.forEach(s => {
+      const spk = s.speakers.length
+        ? `<p class="s-speakers">${s.speakers.map(([n,r]) => `<b>${n}</b>${r?` — ${r}`:""}`).join("<br>")}</p>`
+        : `<p class="s-speakers"><i>Member-led discussion</i></p>`;
+      html += `
+      <div class="card session" data-session="${s.id}">
+        <div class="s-meta">${s.time} &nbsp;·&nbsp; ${s.room}</div>
+        <h3 class="s-title">${s.title}</h3>
+        ${s.presenter ? `<p class="s-presenter">${s.presenter}</p>` : ""}
+        ${spk}
+        <div class="q">
+          ${scaleRow("SESSION:"+s.id+":content","Content &amp; relevance to your work",{na:true,naLabel:"Didn't attend"})}
+        </div>
+        <div class="q reveal" data-follow="${s.id}">
+          ${scaleRow("SESSION:"+s.id+":speaker", s.speakers.length ? "Speaker effectiveness" : "Discussion &amp; facilitation", {align:true})}
+        </div>
+        <div class="q reveal" data-follow="${s.id}">
+          <label class="qlabel">Comments on this session <span class="hint">Optional — shared with the speaker anonymously</span></label>
+          <textarea data-session-comment="${s.id}" placeholder="What landed, what you'd change…"></textarea>
+        </div>
+      </div>`;
+    });
+  });
+  host.innerHTML = html;
+})();
+
+/* -- events -- */
+(function buildEvents(){
+  const host = document.getElementById("events");
+  host.innerHTML = EVENTS.map(e => `
+    <div class="card">
+      <div class="s-meta">${e.meta}</div>
+      <h3 class="s-title">${e.title}</h3>
+      <p class="s-speakers">${e.blurb}</p>
+      <div class="q">
+        <label class="qlabel">Did you attend?</label>
+        <div class="choices" data-single="EVENT:${e.id}:attended">
+          <button type="button" data-v="yes">Yes</button>
+          <button type="button" data-v="no">Didn't attend</button>
+        </div>
+      </div>
+      <div class="reveal" data-evfollow="${e.id}">
+        ${e.rates.map(([k,l]) => `<div class="q">${scaleRow("EVENT:"+e.id+":"+k, l)}</div>`).join("")}
+        <div class="q">
+          <label class="qlabel">Comments <span class="hint">Optional</span></label>
+          <textarea data-event-comment="${e.id}" placeholder=""></textarea>
+        </div>
+      </div>
+    </div>`).join("");
+})();
+
+/* -- plain rate rows -- */
+document.querySelectorAll("[data-rate]").forEach(el => {
+  const path = el.getAttribute("data-rate");
+  el.innerHTML = scaleRow(path, RATE_LABELS[path] || path);
+});
+
+/* -- NPS -- */
+document.querySelectorAll("[data-nps]").forEach(el => {
+  el.innerHTML = Array.from({length:11},(_,i)=>`<button type="button" data-v="${i}">${i}</button>`).join("");
+});
+
+/* ============================================================
+   INTERACTION
+   ============================================================ */
+/* clear every control inside a block and drop the matching answers */
+function resetBlock(el, obj, keys){
+  if(el){
+    el.querySelectorAll('button[aria-pressed="true"]').forEach(b => b.setAttribute("aria-pressed","false"));
+    el.querySelectorAll("textarea, input").forEach(i => i.value = "");
+  }
+  if(!obj) return;
+  if(keys) keys.forEach(k => delete obj[k]);
+  else Object.keys(obj).forEach(k => delete obj[k]);
+}
+
+function pressGroup(container, btn, multi){
+  if(multi){
+    const on = btn.getAttribute("aria-pressed") === "true";
+    btn.setAttribute("aria-pressed", on ? "false" : "true");
+  } else {
+    const already = btn.getAttribute("aria-pressed") === "true";
+    container.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed","false"));
+    btn.setAttribute("aria-pressed", already ? "false" : "true");
+  }
+}
+
+document.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-v]");
+  if(!btn) return;
+  const wrap = btn.parentElement;
+
+  // ---- 1-5 scales ----
+  if(wrap.classList.contains("scale")){
+    pressGroup(wrap, btn, false);
+    const path = wrap.getAttribute("data-rate-path");
+    const on   = btn.getAttribute("aria-pressed") === "true";
+    const raw  = btn.getAttribute("data-v");
+    const val  = !on ? null : (raw === "na" ? "na" : Number(raw));
+
+    if(path.startsWith("SESSION:")){
+      const [,sid,field] = path.split(":");
+      state.sessions[sid] = state.sessions[sid] || {};
+      if(field === "content"){
+        const card = document.querySelector(`[data-session="${sid}"]`);
+        const show = (val !== null && val !== "na");
+        if(val === null){ delete state.sessions[sid]; }
+        else if(val === "na"){ state.sessions[sid] = {attended:false}; }
+        else { state.sessions[sid].attended = true; state.sessions[sid].content = val; }
+        document.querySelectorAll(`[data-follow="${sid}"]`).forEach(n => n.classList.toggle("on", show));
+        card.classList.toggle("answered", show);
+        card.classList.toggle("skipped", val === "na");
+        if(!show){
+          card.querySelectorAll("textarea").forEach(t=>t.value="");
+          card.querySelectorAll('[data-rate-path$=":speaker"] button').forEach(b=>b.setAttribute("aria-pressed","false"));
+        }
+      } else {
+        if(val === null) delete state.sessions[sid][field]; else state.sessions[sid][field] = val;
+      }
+    } else if(path.startsWith("EVENT:")){
+      const [,eid,field] = path.split(":");
+      state.events[eid] = state.events[eid] || {};
+      if(val === null) delete state.events[eid][field]; else state.events[eid][field] = val;
+    } else {
+      if(val === null){ const p = path.split("."); if(state[p[0]]) delete state[p[0]][p[1]]; }
+      else setPath(path, val);
+    }
+    afterChange(); return;
+  }
+
+  // ---- NPS ----
+  if(wrap.hasAttribute("data-nps")){
+    pressGroup(wrap, btn, false);
+    flat.nps = btn.getAttribute("aria-pressed") === "true" ? Number(btn.getAttribute("data-v")) : null;
+    afterChange(); return;
+  }
+
+  // ---- choice pills ----
+  if(wrap.classList.contains("choices")){
+    const single = wrap.getAttribute("data-single");
+    const multi  = wrap.getAttribute("data-multi");
+    pressGroup(wrap, btn, !!multi);
+
+    if(single){
+      const v = btn.getAttribute("aria-pressed") === "true" ? btn.getAttribute("data-v") : null;
+      if(single.startsWith("EVENT:")){
+        const [,eid] = single.split(":");
+        state.events[eid] = state.events[eid] || {};
+        state.events[eid].attended = v;
+        document.querySelector(`[data-evfollow="${eid}"]`).classList.toggle("on", v === "yes");
+      } else {
+        setPath(single, v);
+        if(single === "app_used"){
+          const yes = v === "yes";
+          document.getElementById("appblock").classList.toggle("on", yes);
+          if(!yes) resetBlock(document.getElementById("appblock"), state.app,
+            ["installed","overall","ease","schedule","roster","comment"]);
+        }
+        if(single === "respondent_type"){
+          const isSponsor = v === "affiliate_sponsor";
+          document.getElementById("sponsorsec").classList.toggle("on", isSponsor);
+          document.getElementById("overallnum").textContent = isSponsor ? "08" : "07";
+          document.getElementById("contactnum").textContent = isSponsor ? "09" : "08";
+          if(!isSponsor){
+            resetBlock(document.getElementById("sponsorsec"), state.sponsor);
+            document.getElementById("sponsorblock").classList.remove("on");
+          }
+        }
+        if(single === "sponsor.sponsored"){
+          document.getElementById("sponsorblock").classList.toggle("on", v === "yes");
+          if(v !== "yes") resetBlock(document.getElementById("sponsorblock"), state.sponsor,
+            ["value","connections","visibility","again","comment"]);
+        }
+      }
+    }
+    if(multi){
+      const vals = [...wrap.querySelectorAll('button[aria-pressed="true"]')].map(b => b.getAttribute("data-v"));
+      setPath(multi, vals);
+    }
+    afterChange();
+  }
+});
+
+document.addEventListener("input", e => {
+  const t = e.target;
+  if(t.hasAttribute("data-text")) setPath(t.getAttribute("data-text"), t.value.trim());
+  else if(t.hasAttribute("data-session-comment")){
+    const sid = t.getAttribute("data-session-comment");
+    state.sessions[sid] = state.sessions[sid] || {};
+    state.sessions[sid].comment = t.value.trim();
+  }
+  else if(t.hasAttribute("data-event-comment")){
+    const eid = t.getAttribute("data-event-comment");
+    state.events[eid] = state.events[eid] || {};
+    state.events[eid].comment = t.value.trim();
+  } else return;
+  afterChange();
+});
+
+/* ============================================================
+   PROGRESS + DRAFT
+   ============================================================ */
+function progress(){
+  // meaningful checkpoints, not raw question count
+  const checks = [
+    !!flat.respondent_type,
+    Array.isArray(flat.days) && flat.days.length > 0,
+    Object.keys(state.sessions).length >= 1,
+    Object.keys(state.sessions).length >= 4,
+    !!flat.app_used,
+    Object.keys(state.networking).length >= 1,
+    Object.keys(state.events).length >= 1,
+    Object.keys(state.food).length >= 1,
+    Object.keys(state.hotel).length >= 1,
+    state.overall.value != null,
+    flat.nps != null,
+    !!flat.attend_again,
+    !!(state.overall.best || state.overall.improve)
+  ];
+  return Math.round(checks.filter(Boolean).length / checks.length * 100);
+}
+function afterChange(){
+  const p = progress();
+  document.getElementById("barfill").style.width = p + "%";
+  document.getElementById("pct").textContent = p + "% complete";
+  saveDraft();
+}
+function saveDraft(){
+  try{ localStorage.setItem(DRAFT_KEY, JSON.stringify({state, flat, at:Date.now()}));
+       document.getElementById("draftnote").textContent = "Your answers are saved on this device until you submit.";
+  }catch(_){}
+}
+function clearDraft(){ try{ localStorage.removeItem(DRAFT_KEY); }catch(_){} }
+(function loadDraft(){
+  let d; try{ d = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); }catch(_){ return; }
+  if(!d) return;
+  Object.assign(state, d.state || {}); Object.assign(flat, d.flat || {});
+  // repaint
+  document.querySelectorAll(".scale").forEach(w => {
+    const path = w.getAttribute("data-rate-path"); let v;
+    if(path.startsWith("SESSION:")){
+      const [,s,f]=path.split(":"); const rec = state.sessions[s]||{};
+      v = (f==="content" && rec.attended===false) ? "na" : rec[f];
+    }
+    else if(path.startsWith("EVENT:")){ const [,s,f]=path.split(":"); v=(state.events[s]||{})[f]; }
+    else v = getPath(path);
+    if(v!=null) w.querySelectorAll("button").forEach(b=>{ if(b.getAttribute("data-v")==String(v)) b.setAttribute("aria-pressed","true"); });
+  });
+  document.querySelectorAll(".choices").forEach(w => {
+    const s = w.getAttribute("data-single"), m = w.getAttribute("data-multi");
+    if(s){
+      let v = s.startsWith("EVENT:") ? (state.events[s.split(":")[1]]||{}).attended : getPath(s);
+      if(v!=null) w.querySelectorAll("button").forEach(b=>{ if(b.getAttribute("data-v")===v) b.setAttribute("aria-pressed","true"); });
+    }
+    if(m){ const vals = getPath(m) || []; w.querySelectorAll("button").forEach(b=>{ if(vals.includes(b.getAttribute("data-v"))) b.setAttribute("aria-pressed","true"); }); }
+  });
+  document.querySelectorAll("[data-nps]").forEach(w=>{
+    if(flat.nps!=null) w.querySelectorAll("button").forEach(b=>{ if(b.getAttribute("data-v")==String(flat.nps)) b.setAttribute("aria-pressed","true"); });
+  });
+  document.querySelectorAll("[data-text]").forEach(i=>{ const v=getPath(i.getAttribute("data-text")); if(v) i.value=v; });
+  document.querySelectorAll("[data-session-comment]").forEach(i=>{ const v=(state.sessions[i.getAttribute("data-session-comment")]||{}).comment; if(v) i.value=v; });
+  document.querySelectorAll("[data-event-comment]").forEach(i=>{ const v=(state.events[i.getAttribute("data-event-comment")]||{}).comment; if(v) i.value=v; });
+  // reveals
+  Object.keys(state.sessions).forEach(sid=>{
+    const rec = state.sessions[sid] || {}, card = document.querySelector(`[data-session="${sid}"]`);
+    if(!card) return;
+    const show = rec.attended !== false && rec.content != null;
+    document.querySelectorAll(`[data-follow="${sid}"]`).forEach(n=>n.classList.toggle("on",show));
+    card.classList.toggle("answered", show);
+    card.classList.toggle("skipped", rec.attended === false);
+  });
+  Object.keys(state.events).forEach(eid=>{
+    const n=document.querySelector(`[data-evfollow="${eid}"]`);
+    if(n) n.classList.toggle("on", state.events[eid].attended==="yes");
+  });
+  if(flat.app_used) document.getElementById("appblock").classList.toggle("on", flat.app_used==="yes");
+  if(flat.respondent_type==="affiliate_sponsor"){
+    document.getElementById("sponsorsec").classList.add("on");
+    document.getElementById("overallnum").textContent="08"; document.getElementById("contactnum").textContent="09";
+    if(state.sponsor.sponsored) document.getElementById("sponsorblock").classList.toggle("on", state.sponsor.sponsored==="yes");
+  }
+  afterChange();
+})();
+
+/* ============================================================
+   CLOSE DATE
+   ============================================================ */
+(function checkClosed(){
+  if(new Date() > CLOSE_DATE){
+    document.getElementById("formwrap").style.display = "none";
+    document.querySelector(".progress-wrap").style.display = "none";
+    document.getElementById("closed").classList.add("on");
+  }
+})();
+
+/* ============================================================
+   SUBMIT
+   ============================================================ */
+function clean(o){
+  const out = {};
+  Object.keys(o||{}).forEach(k=>{
+    const v=o[k];
+    if(v===null||v===undefined||v==="") return;
+    if(typeof v==="object" && !Array.isArray(v)){ const c=clean(v); if(Object.keys(c).length) out[k]=c; }
+    else out[k]=v;
+  });
+  return out;
+}
+const num = v => (typeof v === "number" ? v : null);
+
+document.getElementById("submitBtn").addEventListener("click", async () => {
+  const btn = document.getElementById("submitBtn"), msg = document.getElementById("msg");
+  if(state.overall.value == null){
+    msg.className="msg err";
+    msg.textContent="Please give an overall value rating in Section “Overall Experience” before submitting.";
+    document.querySelector('[data-rate="overall.value"]').scrollIntoView({behavior:"smooth",block:"center"});
+    return;
+  }
+  btn.disabled = true; msg.className="msg"; msg.textContent="Submitting…";
+
+  const days = flat.days || [];
+  const payload = {
+    conference: CONFERENCE,
+    respondent_type: flat.respondent_type || null,
+    first_time: flat.first_time ? flat.first_time === "yes" : null,
+    attended_day1: days.includes("day1"),
+    attended_day2: days.includes("day2"),
+    nps: num(flat.nps),
+    overall_value: num(state.overall.value),
+    app_overall: num(state.app.overall),
+    food_overall: num(state.food.quality),
+    hotel_rooms: num(state.hotel.rooms),
+    hotel_amenities: num(state.hotel.amenities),
+    hotel_location: num(state.hotel.location),
+    attend_again: flat.attend_again || null,
+    app_used: flat.app_used ? flat.app_used === "yes" : null,
+    app_installed: state.app.installed ? state.app.installed === "yes" : null,
+    networking_quality: num(state.networking.quality),
+    sessions: clean(state.sessions),
+    app: clean(Object.assign({used: flat.app_used}, state.app)),
+    networking: clean(state.networking),
+    events: clean(state.events),
+    food: clean(state.food),
+    hotel: clean(state.hotel),
+    overall: clean(state.overall),
+    sponsor: Object.keys(clean(state.sponsor)).length ? clean(state.sponsor) : null,
+    contact: Object.keys(clean(state.contact)).length ? clean(state.contact) : null,
+    meta: { submitted_at:new Date().toISOString(), ua:navigator.userAgent,
+            screen:window.innerWidth+"x"+window.innerHeight, progress:progress() }
+  };
+
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
+      method:"POST",
+      headers:{ "apikey":SUPABASE_KEY, "Authorization":"Bearer "+SUPABASE_KEY,
+                "Content-Type":"application/json", "Prefer":"return=minimal" },
+      body: JSON.stringify(payload)
+    });
+    if(!res.ok){
+      const body = await res.text();
+      // RLS blocks inserts after the close date — show the closed panel, not a generic error
+      if(res.status === 403 || /42501|row-level security/i.test(body)){
+        clearDraft();
+        document.getElementById("formwrap").style.display="none";
+        document.querySelector(".progress-wrap").style.display="none";
+        document.getElementById("closed").classList.add("on");
+        window.scrollTo({top:0,behavior:"smooth"});
+        return;
+      }
+      throw new Error(body || ("HTTP "+res.status));
+    }
+    clearDraft();
+    document.getElementById("formwrap").style.display="none";
+    document.querySelector(".progress-wrap").style.display="none";
+    document.getElementById("thanks").classList.add("on");
+    window.scrollTo({top:0,behavior:"smooth"});
+  }catch(err){
+    btn.disabled=false; msg.className="msg err";
+    msg.textContent="Something went wrong — your answers are still saved on this device. Please try again, or email tclark@trmanet.org.";
+    console.error("[TRMA survey]", err);
+  }
+});
+</script>
+</body>
+</html>
